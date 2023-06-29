@@ -1,10 +1,10 @@
 {
-  "name": "curso-javascript-projeto-dropbox-clone",
-  "homepage": "https://github.com/hcodebr/curso-javascript-projeto-dropbox-clone",
+  "name": "projeto-dropbox-clone",
+  "homepage": "https://www.linkedin.com/in/michael-petterson/",
   "authors": [
-    "Hcode Treinamento"
+    "Michael Petterson"
   ],
-  "description": "Projeto desenvolvido no Curso Completo de JavaScript da Hcode",
+  "description": "Projeto desenvolvido em JavaScript e Firebase",
   "main": "index.html",
   "license": "MIT",
   "ignore": [

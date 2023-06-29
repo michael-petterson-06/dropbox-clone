@@ -1,21 +1,21 @@
 {
-  "name": "curso-javascript-projeto-dropbox-clone",
+  "name": "projeto-dropbox-clone",
   "version": "1.0.0",
-  "description": "Projeto desenvolvido no Curso Completo de JavaScript da Hcode",
+  "description": "Projeto desenvolvido com JavaScript e Firebase",
   "main": "index.html",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hcodebr/curso-javascript-projeto-dropbox-clone.git"
+    "url": "https://github.com/michael-petterson-06/dropbox-clone"
   },
-  "author": "Hcode Treinamentos",
+  "author": "Michael Petterson",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/hcodebr/curso-javascript-projeto-dropbox-clone/issues"
+    "url": "https://github.com/michael-petterson-06/dropbox-clone"
   },
-  "homepage": "https://github.com/hcodebr/curso-javascript-projeto-dropbox-clone#readme",
+  "homepage": "https://github.com/michael-petterson-06/dropbox-clone",
   "dependencies": {
     "ionicons": "^2.0.1",
     "bootstrap": "^4.1.0"
