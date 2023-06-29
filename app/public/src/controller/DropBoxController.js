@@ -366,7 +366,7 @@ class DropBoxController {
             li.innerHTML = `${this.getFileIconView(file)}
                  <div class="name text-center">${file.name}</div>`;
     
-            // this.initEventsLi(li);
+            this.initEventsLi(li);
     
             return li;
         }
@@ -395,6 +395,80 @@ class DropBoxController {
                 });
     
              });
+    
+        };
+
+        initEventsLi(li){
+
+            // li.addEventListener('dblclick', e => {
+    
+            //     let file = JSON.parse(li.dataset.file);
+    
+            //     switch (file.type) {
+    
+            //         case 'folder':
+            //             this.currentFolder.push(file.name);
+            //             this.openFolder();
+            //             break;
+    
+            //         default:
+            //             window.open(file.path);
+    
+            //     }
+    
+            // });
+    
+            li.addEventListener('click', e => {
+                
+                li.classList.toggle('selected');
+                // if (e.shiftKey) {
+    
+                //     let firstLi = this.listFilesEl.querySelector('li.selected');
+    
+                //     if (firstLi) {
+    
+                //         let indexStart;
+                //         let indexEnd;
+                //         let lis = li.parentElement.childNodes;
+                        
+                //         lis.forEach((el, index) => {
+    
+                //             if (firstLi === el) indexStart = index;
+                //             if (li === el) indexEnd = index;
+    
+                //         });
+    
+                //         let index = [indexStart, indexEnd].sort();
+    
+                //         lis.forEach((el, i) => {
+    
+                //             if (i >= index[0] && i <= index[1]) el.classList.add('selected');
+    
+                //         });
+    
+                //         this.listFilesEl.dispatchEvent(this.onselectionchange);
+    
+                //         return true;
+                        
+                //     }
+    
+                // }
+                
+                // if (!e.ctrlKey) {
+    
+                //     this.listFilesEl.querySelectorAll('li.selected').forEach(el => {
+    
+                //         el.classList.remove('selected');
+    
+                //     });
+    
+                // }
+    
+                // li.classList.toggle('selected');
+    
+                // this.listFilesEl.dispatchEvent(this.onselectionchange);
+    
+            });
     
         }
 
