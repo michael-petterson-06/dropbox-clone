@@ -420,51 +420,53 @@ class DropBoxController {
     
             li.addEventListener('click', e => {
                 
-                li.classList.toggle('selected');
-                // if (e.shiftKey) {
-    
-                //     let firstLi = this.listFilesEl.querySelector('li.selected');
-    
-                //     if (firstLi) {
-    
-                //         let indexStart;
-                //         let indexEnd;
-                //         let lis = li.parentElement.childNodes;
-                        
-                //         lis.forEach((el, index) => {
-    
-                //             if (firstLi === el) indexStart = index;
-                //             if (li === el) indexEnd = index;
-    
-                //         });
-    
-                //         let index = [indexStart, indexEnd].sort();
-    
-                //         lis.forEach((el, i) => {
-    
-                //             if (i >= index[0] && i <= index[1]) el.classList.add('selected');
-    
-                //         });
-    
-                //         this.listFilesEl.dispatchEvent(this.onselectionchange);
-    
-                //         return true;
-                        
-                //     }
-    
-                // }
                 
-                // if (!e.ctrlKey) {
+                if (e.shiftKey) {
+                    
+                    //Seleciona primeiro arquivo clicado
+                    let firstLi = this.listFilesEl.querySelector('li.selected');
     
-                //     this.listFilesEl.querySelectorAll('li.selected').forEach(el => {
+                    if (firstLi) {
     
-                //         el.classList.remove('selected');
+                        let indexStart;
+                        let indexEnd;
+                        let lis = li.parentElement.childNodes;
+                        
+                        lis.forEach((el, index) => {
     
-                //     });
+                            if (firstLi === el) indexStart = index;
+                            if (li === el) indexEnd = index;
     
-                // }
+                        });
+                        //Ordeno o primeiro e o último arquivo clicado
+                        let index = [indexStart, indexEnd].sort();
     
-                // li.classList.toggle('selected');
+                        lis.forEach((el, i) => {
+                            
+                            //Seleciona tudo que está clicado e entre os clicados
+                            if (i >= index[0] && i <= index[1]) el.classList.add('selected');
+    
+                        });
+    
+                        // this.listFilesEl.dispatchEvent(this.onselectionchange);
+    
+                        return true;
+                        
+                    }
+    
+                }
+                
+                if (!e.ctrlKey) {
+    
+                    this.listFilesEl.querySelectorAll('li.selected').forEach(el => {
+    
+                        el.classList.remove('selected');
+    
+                    });
+    
+                }
+    
+                li.classList.toggle('selected');
     
                 // this.listFilesEl.dispatchEvent(this.onselectionchange);
     
