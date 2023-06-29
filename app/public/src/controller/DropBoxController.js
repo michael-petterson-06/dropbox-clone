@@ -2,6 +2,8 @@ class DropBoxController {
     
     constructor(){
 
+            //Criando um evento para quando mudar o arquivo selecionado
+            this.onselectionchange = new Event('selectionchange');
             this.btnSendFileEl = document.querySelector('#btn-send-file');
             this.inputFilesEl = document.querySelector('#files');
             this.snackModalEl = document.querySelector('#react-snackbar-root');
@@ -34,6 +36,28 @@ class DropBoxController {
         }
 
         initEvents() {
+            
+            this.listFilesEl.addEventListener('selectionchange', e => {
+                console.log(this.listFilesEl)
+                // switch (this.getSelection().length) {
+    
+                //     case 0:
+                //         this.btnDelete.style.display = 'none';
+                //         this.btnRename.style.display = 'none';
+                //     break;
+    
+                //     case 1:
+                //         this.btnDelete.style.display = 'block';
+                //         this.btnRename.style.display = 'block';
+                //     break;
+    
+                //     default:
+                //         this.btnDelete.style.display = 'block';
+                //         this.btnRename.style.display = 'none';
+    
+                // }
+    
+            });
             
             this.btnSendFileEl.addEventListener('click', event => {
                 this.inputFilesEl.click();
@@ -420,7 +444,9 @@ class DropBoxController {
     
             li.addEventListener('click', e => {
                 
-                
+                //Executando o evento onselectionchange
+                this.listFilesEl.dispatchEvent(this.onselectionchange);
+
                 if (e.shiftKey) {
                     
                     //Seleciona primeiro arquivo clicado
@@ -448,7 +474,7 @@ class DropBoxController {
     
                         });
     
-                        // this.listFilesEl.dispatchEvent(this.onselectionchange);
+                        this.listFilesEl.dispatchEvent(this.onselectionchange);
     
                         return true;
                         
