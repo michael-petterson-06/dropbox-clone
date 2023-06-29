@@ -46,6 +46,25 @@ class DropBoxController {
         }
 
         initEvents() {
+
+            this.btnRename.addEventListener('click', e => {
+
+                //Pegar o primeiro item selecionado
+                let li = this.getSelection()[0];
+    
+                let file = JSON.parse(li.dataset.file);
+    
+                let name = prompt("Renomear o arquivo:", file.name);
+    
+                if (name) {
+    
+                    file.name = name;
+                    //Procurar e atualizar filho no Firebase
+                    this.getFirebaseRef().child(li.dataset.key).set(file);
+    
+                }
+    
+            });
             
             this.listFilesEl.addEventListener('selectionchange', e => {
                 
