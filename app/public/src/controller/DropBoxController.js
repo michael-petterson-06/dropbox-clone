@@ -662,19 +662,19 @@ class DropBoxController {
     
             this.navEl.innerHTML = nav.innerHTML;
     
-            // this.navEl.querySelectorAll('a').forEach(a => {
+            this.navEl.querySelectorAll('a').forEach(a => {
     
-            //     a.addEventListener('click', e => {
+                a.addEventListener('click', e => {
     
-            //         e.preventDefault();
+                    e.preventDefault();
     
-            //         this.currentFolder = a.dataset.path.split('/');
+                    this.currentFolder = a.dataset.path.split('/');
     
-            //         this.openFolder();
+                    this.openFolder();
     
-            //     });
+                });
     
-            // });
+            });
     
         }
         
