@@ -9,6 +9,40 @@ router.get('/', function(req, res, next) {
 });
 
 
+//Lendo arquivo
+router.get('/file', (req, res) => {
+
+  let path = './' + req.query.path;
+  
+  if (fs.existsSync(path)) {
+
+    fs.readFile(path, (err, data) => {
+
+      if (err) {
+
+        console.error(err);
+        res.status(400).json({
+          error: err
+        });
+
+      } else {
+
+        res.status(200).end(data);
+
+      }
+
+    });
+
+  } else {
+
+    res.status(404).json({
+      error: 'File not found.'
+    });
+
+  }
+
+});
+
 
 router.delete('/file', (req, res) => {
 
@@ -43,21 +77,19 @@ router.delete('/file', (req, res) => {
 
       });
 
-    } 
-    
-    // else {
+    } else {
 
-    //   res.status(404).json({
-    //     error: 'File not found.'
-    //   });
+      res.status(404).json({
+        error: 'File not found.'
+      });
   
-    // }
+    }
 
   });
 
 });
 
-
+//Colando arquivo na pasta
 router.post('/upload', (req, res) => {
 
   let form = new formidable.IncomingForm({
