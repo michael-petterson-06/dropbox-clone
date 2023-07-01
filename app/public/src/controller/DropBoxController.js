@@ -54,9 +54,9 @@ class DropBoxController {
             return new Promise((resolve, reject) => {
     
                 let folderRef = this.getFirebaseRef(ref + '/' + name);
-    
+                //abro a pasta para verificar conteúdo
                 folderRef.on('value', snapshot => {
-    
+                    
                     folderRef.off('value');
     
                     if (snapshot.exists()) {
@@ -848,7 +848,7 @@ class DropBoxController {
     
                     default:
                         
-                        window.open('/file?path='+file.path);
+                        window.open(file.path);
       
                 }
     
