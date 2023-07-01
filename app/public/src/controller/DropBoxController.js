@@ -48,70 +48,196 @@ class DropBoxController {
     
         }
 
-
+        //Apagando pasta e subpastas
+        removeFolderTask(ref, name, key){
+        
+            return new Promise((resolve, reject) => {
+    
+                let folderRef = this.getFirebaseRef(ref + '/' + name);
+    
+                folderRef.on('value', snapshot => {
+    
+                    folderRef.off('value');
+    
+                    if (snapshot.exists()) {
+    
+                        snapshot.forEach(item => {
+    
+                            let data = item.val();
+                            data.key = item.key;
+        
+                            if (data.type === 'folder') {
+        
+                                this.removeFolderTask(ref + '/' + name, data.name).then(() => {
+        
+                                    resolve({
+                                        fields: {
+                                            key: data.key
+                                        }
+                                    });
+        
+                                }).catch(err => {
+                                    reject(err);
+                                });
+        
+                            } else if (data.type) {
+        
+                                this.removeFile(ref + '/' + name, data.name).then(() => {
+        
+                                    resolve({
+                                        fields: {
+                                            key: data.key
+                                        }
+                                    });
+        
+                                }).catch(err => {
+                                    reject(err);
+                                });
+        
+                            }
+        
+                        });
+        
+                        folderRef.remove();
+    
+                    } else {
+    
+                        this.getFirebaseRef('directory').child(key).remove();
+                        
+                    }
+    
+                });
+    
+            });
+    
+        }
+    
         removeTask(){
-
+    
             let promises = [];
-
+    
             this.getSelection().forEach(li => {
-
+    
                 let file = JSON.parse(li.dataset.file);
                 let key = li.dataset.key;
+    
+                promises.push(new Promise((resolve, reject) => {
+                    //Apagando pasta vazia
+                    if (file.type === 'folder') {
+    
+                        this.removeFolderTask(this.currentFolder.join('/'), file.name, key).then(() => {
+    
+                            resolve({
+                                fields: {
+                                    key
+                                }
+                            });
+    
+                        }).catch(err => {
+        
+                            reject(err);
+        
+                        });
+    
+                    } else if (file.type) {
+    
+                        this.removeFile(this.currentFolder.join('/'), file.name).then(() => {
+    
+                            resolve({
+                                fields: {
+                                    key
+                                }
+                            });
+        
+                        }).catch(err => {
+        
+                            reject(err);
+        
+                        });
+    
+                    }
+    
+                }));
+    
+            });
+    
+            return Promise.all(promises);
+    
+        }
+    
+        removeFile(ref, name){
+    
+            let fileRef = firebase.storage().ref(ref).child(name);
+    
+            return fileRef.delete();
+    
+        }
+    
+    
 
-                let formData = new FormData() //Ler arquivo
+        // removeTask(){
+
+        //     let promises = [];
+
+        //     this.getSelection().forEach(li => {
+
+        //         let file = JSON.parse(li.dataset.file);
+        //         let key = li.dataset.key;
+
+        //         let formData = new FormData() //Ler arquivo
                     
-                //Cria o nome do campo no servidor e envia o arquivo
-                formData.append('path', file.path); 
-                formData.append('key', key); 
+        //         //Cria o nome do campo no servidor e envia o arquivo
+        //         formData.append('path', file.path); 
+        //         formData.append('key', key); 
 
-                promises.push(this.ajax('/file', 'DELETE', formData,))
+        //         promises.push(this.ajax('/file', 'DELETE', formData,))
 
-                // promises.push(new Promise((resolve, reject) => {
+        //         // promises.push(new Promise((resolve, reject) => {
 
-                //     // if (file.type === 'folder') {
+        //         //     // if (file.type === 'folder') {
 
-                //     //     this.removeFolderTask(this.currentFolder.join('/'), file.name, key).then(() => {
+        //         //     //     this.removeFolderTask(this.currentFolder.join('/'), file.name, key).then(() => {
 
-                //     //         resolve({
-                //     //             fields: {
-                //     //                 key
-                //     //             }
-                //     //         });
+        //         //     //         resolve({
+        //         //     //             fields: {
+        //         //     //                 key
+        //         //     //             }
+        //         //     //         });
 
-                //     //     }).catch(err => {
+        //         //     //     }).catch(err => {
         
-                //     //         reject(err);
+        //         //     //         reject(err);
         
-                //     //     });
+        //         //     //     });
 
-                //     // } else 
+        //         //     // } else 
                     
-                //     if (file.type) {
+        //         //     if (file.type) {
 
-                //         this.removeFile(this.currentFolder.join('/'), file.name).then(() => {
+        //         //         this.removeFile(this.currentFolder.join('/'), file.name).then(() => {
 
-                //             resolve({
-                //                 fields: {
-                //                     key
-                //                 }
-                //             });
+        //         //             resolve({
+        //         //                 fields: {
+        //         //                     key
+        //         //                 }
+        //         //             });
         
-                //         }).catch(err => {
+        //         //         }).catch(err => {
         
-                //             reject(err);
+        //         //             reject(err);
         
-                //         });
+        //         //         });
 
-                //     }
+        //         //     }
 
-                // }));
+        //         // }));
 
             
-            });
+        //     });
 
-            return Promise.all(promises);
+        //     return Promise.all(promises);
 
-        }
+        // }
 
         // removeFile(ref, name){
 
@@ -211,22 +337,14 @@ class DropBoxController {
                 this.btnSendFileEl.disabled = true;
 
                 this.uploadTask(event.target.files).then(responses => {
-
+                   
                     responses.forEach(resp => {
-                        
-                        
-                        this.getFirebaseRef().push().set(resp.files['input-file'])
-                        // resp.ref.getDownloadURL().then(data => {
-    
-                        //     this.getFirebaseRef().push().set({
-                        //         name: resp.name,
-                        //         type: resp.contentType,
-                        //         path: data,
-                        //         size: resp.size
-                        //     });
-    
-                        // });
-    
+                            this.getFirebaseRef().push().set({
+                            name: resp.name,
+                            type: resp.contentType,
+                            path: resp.downloadURLs[0],
+                            size: resp.size
+                        });
                     });
                     
                     this.uploadComplete();
@@ -241,7 +359,8 @@ class DropBoxController {
                 // this.snackModalEl.style.display = (show) ? 'block' : 'none';
                 this.uploadComplete();
 
-                this.inputFilesEl.value = '';
+                
+                this.modalShow();
                 
             });
                    
@@ -311,23 +430,58 @@ class DropBoxController {
 
             let promises = [];
             [...files].forEach(file => {
-                
-                let formData = new FormData() //Ler arquivo
+         
+                promises.push(new Promise((resolve, reject) => {
+                    //Cria referêcia com caminho do arquivo e com o nome do arquivo
+                    let fileRef = firebase.storage().ref(this.currentFolder.join('/')).child(file.name);
                     
-                //Cria o nome do campo no servidor e envia o arquivo
-                formData.append('input-file', file); 
+                    //Busca o método que vai gerenciar os eventos
+                    let task = fileRef.put(file);
+    
+                    task.on('state_changed', snapshot => {
+                        this.uploadProgress({
+                            loaded: snapshot.bytesTransferred,
+                            total: snapshot.totalBytes
+                        }, file);
+                        
+                        this.startUploadTime = Date.now();
 
-                let promise = this.ajax('/upload', 'POST', formData, ()=>{
-
-                    this.uploadProgress(event, file);
-
-                }, ()=> { 
+                    }, error => {
+    
+                        console.error(error);
+                        reject(error);
+    
+                    }, () => {
+                     
+                        fileRef.getMetadata().then(metadata => {
+    
+                            resolve(metadata);
+    
+                        }).catch(err => {
+    
+                            reject(err);
+    
+                        });
+    
+                    });
+    
+                }));
+                // let formData = new FormData() //Ler arquivo
                     
-                    this.startUploadTime = Date.now();
+                // //Cria o nome do campo no servidor e envia o arquivo
+                // formData.append('input-file', file); 
 
-                })
+                // let promise = this.ajax('/upload', 'POST', formData, ()=>{
 
-                promises.push(promise);
+                //     this.uploadProgress(event, file);
+
+                // }, ()=> { 
+                    
+                //     this.startUploadTime = Date.now();
+
+                // })
+
+                // promises.push(promise);
                     
                     
                     //Deletar 
@@ -372,17 +526,17 @@ class DropBoxController {
         };
 
         uploadProgress(event, file){
-
+            
             let timespent = Date.now() - this.startUploadTime; //tempo gasto
             let loaded = event.loaded; //Dados enviados 
             let total = event.total; //Tamanho do arquivo
             let porcent = parseInt((loaded / total) * 100);
             let timeleft = ((100 - porcent) * timespent) / porcent; //tempo restante
-    
-            this.progressBarEl.style.width = `${porcent}%`;
             
+            this.progressBarEl.style.width = `${porcent}%`;
             this.namefileEl.innerHTML = file.name;
             this.timeleftEl.innerHTML = this.formatTimeToHuman(timeleft);
+                       
     
         };
 
